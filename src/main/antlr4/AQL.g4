@@ -28,9 +28,9 @@ num_gte_expression: VARIABLE '>=' NUMBER;
 num_lt_expression: VARIABLE '<' NUMBER;
 num_lte_expression: VARIABLE '<=' NUMBER;
 
-datetime_between_expression: VARIABLE 'between' from 'and' to;
+datetime_between_expression: VARIABLE 'from' from 'to' to;
 
-from: DATE_TIME;
+from: STRING;
 to: DATE_TIME;
 
 //
@@ -45,6 +45,7 @@ fragment LETTER : [a-zA-Z] | '_';
 fragment IDENTIFIER: LETTER (LETTER | DIGIT)*;
 fragment DATE : TWO_DIGIT TWO_DIGIT '-' TWO_DIGIT '-' TWO_DIGIT;
 fragment TIME : TWO_DIGIT ':' TWO_DIGIT ':' TWO_DIGIT;
+fragment RESERVED: 'from' | 'to' | 'and' | 'or' | '=' | '>' | '>=' | '<=' | '<' | '!=';
 
 WS: (' ' | '\t')+ -> skip;
 
@@ -55,8 +56,4 @@ STRING
     | '"' .*? '"'
     ;
 
-fragment RESERVED: 'between' | 'and' | 'or';
-
 VARIABLE: IDENTIFIER+('.'IDENTIFIER)*;
-
-DATE_TIME: '\'' DATE '_' TIME '\'';

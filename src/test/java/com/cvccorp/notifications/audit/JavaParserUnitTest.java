@@ -3,52 +3,25 @@ package com.cvccorp.notifications.audit;
 import antlr4.AQLLexer;
 import antlr4.AQLParser;
 import com.cvccorp.notifications.audit.parser.ASTVisitor;
+import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.antlr.v4.runtime.CharStreams.fromString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
+@Slf4j
 @SpringBootTest
 public class JavaParserUnitTest {
 
-/*    @Test
-    public void whenOneMethodStartsWithUpperCase_thenOneErrorReturned() throws Exception {
-        // Prepare
-        var input = "public class SampleClass { void DoSomething(){} }";
-
-        var lexer = new Aq(fromString(input));
-
-        var tokens = new CommonTokenStream(lexer);
-
-        var parser = new Java8Parser(tokens);
-
-        ParseTree tree = parser.compilationUnit();
-
-
-        show(tree, parser);
-
-        var walker = new ParseTreeWalker();
-
-        var uppercaseMethodListener = new UppercaseMethodListener();
-
-
-        walker.walk(uppercaseMethodListener, tree);
-
-        assertThat(uppercaseMethodListener.getErrors().size(), is(1));
-        assertThat(uppercaseMethodListener.getErrors().get(0), is("Method DoSomething is uppercased!"));
-    }
-*/
-
     @Test
-    void test2() {
+    void test1() {
         // Prepare
-        var input = "field1=1 and field3='hello3'";
+        var query = " user.id = 1 and user.name = 'adrian' or user.age = 20 and user.birth from '1981-09-22 21:15:00' to '2020-01-01 10:05:05' ";
+        log.info("Query: {}", query);
 
-        var lexer = new AQLLexer(fromString(input));
+        var lexer = new AQLLexer(fromString(query));
 
         var tokens = new CommonTokenStream(lexer);
 
@@ -56,10 +29,8 @@ public class JavaParserUnitTest {
 
         var tree = parser.query();
 
-        var listener = new ASTVisitor();
+        var visitor = new ASTVisitor();
         var walker = new ParseTreeWalker();
-        walker.walk(listener, tree);
-
-        // show(tree, parser);
+        walker.walk(visitor, tree);
     }
 }
