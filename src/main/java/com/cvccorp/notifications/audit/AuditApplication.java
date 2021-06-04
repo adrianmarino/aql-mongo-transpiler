@@ -3,7 +3,7 @@ package com.cvccorp.notifications.audit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Collections;
+import static org.antlr.v4.runtime.CharStreams.fromString;
 
 @SpringBootApplication
 public class AuditApplication {
