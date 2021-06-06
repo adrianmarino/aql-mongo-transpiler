@@ -1,4 +1,4 @@
-package com.cvccorp.notifications.audit.parser;
+package com.nonosoft.query.transpiler.parser.util;
 
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.Parser;

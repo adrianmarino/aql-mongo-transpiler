@@ -1,53 +1,45 @@
-grammar AQL;
+grammar AQL; // ADRI Query Language Dad! ;)!
+//
+//
+//
 // ----------------------------------------------------------------------------
 // Grammar rules
 // ----------------------------------------------------------------------------
-query: expression (bool_op expression)*;
-
-bool_op: 'and' | 'or';
+query: expression;
 
 expression
-    : str_eq_expression
-    | str_nq_expression
-    | num_eq_expression
-    | num_nq_expression
-    | num_gt_expression
-    | num_lt_expression
-    | num_gte_expression
-    | num_lte_expression
-    | datetime_between_expression;
+    : '(' expression ')'                                  # parExpression
+    | expression ('and' | 'AND' | '&&' | '&') expression  # andExpression
+    | expression ('or' | 'OR' | '||' | '|')   expression  # orExpression
 
-str_eq_expression: VARIABLE '=' STRING;
-str_nq_expression: VARIABLE '!=' STRING;
+    // String expressions:
+    | PROPERTY '='  STRING # strEqExpression
+    | PROPERTY '!=' STRING # strNotEqExpression
 
-num_eq_expression: VARIABLE '=' NUMBER;
-num_nq_expression: VARIABLE '!=' NUMBER;
+    // Numeric expressions:
+    | PROPERTY '='  NUMBER # numEqExpression
+    | PROPERTY '!=' NUMBER # numNotEqExpression
+    | PROPERTY '>'  NUMBER # numGTExpression
+    | PROPERTY '<'  NUMBER # numLTExpression
+    | PROPERTY '>=' NUMBER # numGTEqExpression
+    | PROPERTY '<=' NUMBER # numLTEqExpression
 
-num_gt_expression: VARIABLE '>' NUMBER;
-num_gte_expression: VARIABLE '>=' NUMBER;
-num_lt_expression: VARIABLE '<' NUMBER;
-num_lte_expression: VARIABLE '<=' NUMBER;
-
-datetime_between_expression: VARIABLE 'from' from 'to' to;
-
-from: STRING;
-to: DATE_TIME;
-
+    // Datetime expression:
+    | PROPERTY 'from' DATE_TIME 'to' DATE_TIME # datetimeBetweenExpression
+    ;
 //
 //
 //
 // ----------------------------------------------------------------------------
 // Lexical rules
 // ----------------------------------------------------------------------------
-fragment DIGIT  : [0-9];
-fragment TWO_DIGIT : DIGIT DIGIT;
-fragment LETTER : [a-zA-Z] | '_';
-fragment IDENTIFIER: LETTER (LETTER | DIGIT)*;
-fragment DATE : TWO_DIGIT TWO_DIGIT '-' TWO_DIGIT '-' TWO_DIGIT;
-fragment TIME : TWO_DIGIT ':' TWO_DIGIT ':' TWO_DIGIT;
-fragment RESERVED: 'from' | 'to' | 'and' | 'or' | '=' | '>' | '>=' | '<=' | '<' | '!=';
+fragment DIGIT      : [0-9];
+fragment LETTER     : [a-zA-Z] | '_';
+fragment IDENTIFIER : LETTER (LETTER | DIGIT)*;
 
-WS: (' ' | '\t')+ -> skip;
+WS: (' ' | '\t' | '\n' | '\r')+ -> skip;
+
+PROPERTY: IDENTIFIER+('.'IDENTIFIER)*;
 
 NUMBER: DIGIT+('.'DIGIT)* | DIGIT+;
 
@@ -56,4 +48,11 @@ STRING
     | '"' .*? '"'
     ;
 
-VARIABLE: IDENTIFIER+('.'IDENTIFIER)*;
+/*
+  Datetime
+*/
+fragment DATE:  DIGIT DIGIT DIGIT DIGIT '-' DIGIT DIGIT '-' DIGIT DIGIT;
+fragment TIME: DIGIT DIGIT ':' DIGIT DIGIT ':' DIGIT DIGIT;
+DATE_TIME
+    :  '´' DATE ' ' TIME '´'
+    |  '´' DATE '´';
