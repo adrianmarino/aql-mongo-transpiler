@@ -33,6 +33,9 @@ expression
     | PROPERTY '<=' DATE_TIME # dateTimeLTEqExpression
 
     | PROPERTY 'from' DATE_TIME 'to' DATE_TIME # datetimeBetweenExpression
+
+    // Like expression:
+    | PROPERTY 'like' STRING # likeExpression
     ;
 //
 //

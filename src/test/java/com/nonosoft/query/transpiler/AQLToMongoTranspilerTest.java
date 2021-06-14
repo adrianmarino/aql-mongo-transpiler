@@ -145,9 +145,13 @@ public class AQLToMongoTranspilerTest {
 
     @Test()
     void scenario16() {
-        assertThrows(AQLSyntaxException.class, () -> transpiler.transpile("name . 'Adian"));
+        assertThrows(AQLSyntaxException.class, () -> transpiler.transpile("name . 'Adrian"));
     }
 
+    @Test
+    void scenario17() {
+        test("name like 'Adr*'", "{'name': new RegExp('Adr*')}");
+    }
 
     private void test(String origin, String expectedTarget) {
         // Perform

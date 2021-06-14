@@ -252,4 +252,25 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         );
         super.enterDatetimeBetweenExpression(ctx);
     }
+
+
+    /*
+     * ------------------------------------------------------------------------
+     *
+     * Like expression
+     *
+     * ------------------------------------------------------------------------
+     */
+
+
+    @Override
+    public void enterLikeExpression(LikeExpressionContext ctx) {
+        addExpression(
+                ctx,
+                ctx.PROPERTY().getText(),
+                format("new RegExp(%s)",  ctx.STRING().getText())
+        );
+
+        super.enterLikeExpression(ctx);
+    }
 }
