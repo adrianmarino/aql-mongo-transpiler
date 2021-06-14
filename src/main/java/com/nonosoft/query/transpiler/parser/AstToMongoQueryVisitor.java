@@ -165,7 +165,7 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         addExpression(
                 ctx,
                 ctx.PROPERTY().getText(),
-                format("{$lte:'%s}", ctx.NUMBER().getText())
+                format("{$lte: %s}", ctx.NUMBER().getText())
         );
         super.enterNumLTEqExpression(ctx);
     }
@@ -184,7 +184,7 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         addExpression(
                 ctx,
                 ctx.PROPERTY().getText(),
-                format("new ISODate('%s')", ctx.DATE_TIME().getText().replace("´", ""))
+                format("%s", getDateTime(ctx.DATE_TIME().getText()))
         );
         super.enterDateTimeEqExpression(ctx);
     }
@@ -194,7 +194,7 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         addExpression(
                 ctx,
                 ctx.PROPERTY().getText(),
-                format("{$gte: new ISODate('%s')}", ctx.DATE_TIME().getText().replace("´", ""))
+                format("{$gte: %s}", getDateTime(ctx.DATE_TIME().getText()))
         );
         super.enterDateTimeGTEqExpression(ctx);
     }
@@ -204,7 +204,7 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         addExpression(
                 ctx,
                 ctx.PROPERTY().getText(),
-                format("{$lte: new ISODate('%s')}", ctx.DATE_TIME().getText().replace("´", ""))
+                format("{$lte: %s}", getDateTime(ctx.DATE_TIME().getText()))
         );
         super.enterDateTimeLTEqExpression(ctx);
     }
@@ -214,7 +214,7 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         addExpression(
                 ctx,
                 ctx.PROPERTY().getText(),
-                format("{$gt: new ISODate('%s')}", ctx.DATE_TIME().getText().replace("´", ""))
+                format("{$gt: %s}", getDateTime(ctx.DATE_TIME().getText()))
         );
         super.enterDateTimeGTExpression(ctx);
     }
@@ -224,9 +224,19 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         addExpression(
                 ctx,
                 ctx.PROPERTY().getText(),
-                format("{$lt: new ISODate('%s')}", ctx.DATE_TIME().getText().replace("´", ""))
+                format("{$lt: %s}", getDateTime(ctx.DATE_TIME().getText()))
         );
         super.enterDateTimeLTExpression(ctx);
+    }
+
+    private String getDateTime(String datetime) {
+        var value = datetime.replace("´", "");
+
+        var parts = value.split(" ");
+        var date = parts[0];
+        var time = parts.length > 1 ? parts[1] : "00:00:00";
+
+        return String.format("new ISODate('%sT%sZ')", date, time);
     }
 
     @Override
@@ -234,7 +244,7 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         addExpression(
                 ctx,
                 ctx.PROPERTY().getText(),
-                format("{$ne: new ISODate('%s')}", ctx.DATE_TIME().getText().replace("´", ""))
+                format("{$ne: %s}", getDateTime(ctx.DATE_TIME().getText()))
         );
         super.enterDateTimeNotEqExpression(ctx);
     }
@@ -245,9 +255,9 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
                 ctx,
                 ctx.PROPERTY().getText(),
                 format(
-                        "{$gte: new ISODate('%s'), $lte: new ISODate('%s')}",
-                        ctx.DATE_TIME(0).getText().replace("´", ""),
-                        ctx.DATE_TIME(1).getText().replace("´", "")
+                        "{$gte: %s, $lte: %s}",
+                        getDateTime(ctx.DATE_TIME(0).getText()),
+                        getDateTime(ctx.DATE_TIME(1).getText())
                 )
         );
         super.enterDatetimeBetweenExpression(ctx);
@@ -268,7 +278,7 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         addExpression(
                 ctx,
                 ctx.PROPERTY().getText(),
-                format("new RegExp(%s)",  ctx.STRING().getText())
+                format("new RegExp(%s)", ctx.STRING().getText())
         );
 
         super.enterLikeExpression(ctx);

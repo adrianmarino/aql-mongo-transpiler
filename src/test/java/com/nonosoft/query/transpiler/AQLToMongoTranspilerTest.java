@@ -25,27 +25,19 @@ public class AQLToMongoTranspilerTest {
 
     @Test
     void scenario3() {
-        // Prepare
-        var origin = "birth_date from ´1981-09-22´ to ´2020-01-01´";
-        var expectedTarget = "{'birth_date': {$gte: new ISODate('1981-09-22'), $lte: new ISODate('2020-01-01')}}";
-
-        test(origin, expectedTarget);
+        test("name like 'Adr*'", "{'name': new RegExp('Adr*')}");
     }
 
     @Test
     void scenario4() {
-        // Prepare
-        var origin = "birth_date = ´1981-09-22´";
-        var expectedTarget = "{'birth_date': new ISODate('1981-09-22')}";
-
-        test(origin, expectedTarget);
+        test("user.age = 10", "{'user.age': 10}");
     }
 
     @Test
     void scenario5() {
         // Prepare
-        var origin = "birth_date != ´1981-09-22´";
-        var expectedTarget = "{'birth_date': {$ne: new ISODate('1981-09-22')}}";
+        var origin = "birth_date from ´1981-09-22´ to ´2020-01-01´";
+        var expectedTarget = "{'birth_date': {$gte: new ISODate('1981-09-22T00:00:00Z'), $lte: new ISODate('2020-01-01T00:00:00Z')}}";
 
         test(origin, expectedTarget);
     }
@@ -53,8 +45,8 @@ public class AQLToMongoTranspilerTest {
     @Test
     void scenario6() {
         // Prepare
-        var origin = "birth_date > ´1981-09-22´";
-        var expectedTarget = "{'birth_date': {$gt: new ISODate('1981-09-22')}}";
+        var origin = "birth_date = ´1981-09-22´";
+        var expectedTarget = "{'birth_date': new ISODate('1981-09-22T00:00:00Z')}";
 
         test(origin, expectedTarget);
     }
@@ -62,18 +54,17 @@ public class AQLToMongoTranspilerTest {
     @Test
     void scenario7() {
         // Prepare
-        var origin = "birth_date >= ´1981-09-22´";
-        var expectedTarget = "{'birth_date': {$gte: new ISODate('1981-09-22')}}";
+        var origin = "birth_date >= ´1981-09-22 10:05:01´";
+        var expectedTarget = "{'birth_date': {$gte: new ISODate('1981-09-22T10:05:01Z')}}";
 
         test(origin, expectedTarget);
     }
 
-
     @Test
     void scenario8() {
         // Prepare
-        var origin = "birth_date < ´1981-09-22´";
-        var expectedTarget = "{'birth_date': {$lt: new ISODate('1981-09-22')}}";
+        var origin = "birth_date != ´1981-09-22´";
+        var expectedTarget = "{'birth_date': {$ne: new ISODate('1981-09-22T00:00:00Z')}}";
 
         test(origin, expectedTarget);
     }
@@ -81,14 +72,42 @@ public class AQLToMongoTranspilerTest {
     @Test
     void scenario9() {
         // Prepare
-        var origin = "birth_date <= ´1981-09-22´";
-        var expectedTarget = "{'birth_date': {$lte: new ISODate('1981-09-22')}}";
+        var origin = "birth_date > ´1981-09-22´";
+        var expectedTarget = "{'birth_date': {$gt: new ISODate('1981-09-22T00:00:00Z')}}";
 
         test(origin, expectedTarget);
     }
 
     @Test
     void scenario10() {
+        // Prepare
+        var origin = "birth_date >= ´1981-09-22´";
+        var expectedTarget = "{'birth_date': {$gte: new ISODate('1981-09-22T00:00:00Z')}}";
+
+        test(origin, expectedTarget);
+    }
+
+
+    @Test
+    void scenario11() {
+        // Prepare
+        var origin = "birth_date < ´1981-09-22´";
+        var expectedTarget = "{'birth_date': {$lt: new ISODate('1981-09-22T00:00:00Z')}}";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario12() {
+        // Prepare
+        var origin = "birth_date <= ´1981-09-22´";
+        var expectedTarget = "{'birth_date': {$lte: new ISODate('1981-09-22T00:00:00Z')}}";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario13() {
         // Prepare
         var origin = "name = 'Adrian' and age = 30";
         var expectedTarget = "{ $and:[{'name': 'Adrian'}, {'age': 30}] }";
@@ -97,7 +116,7 @@ public class AQLToMongoTranspilerTest {
     }
 
     @Test
-    void scenario11() {
+    void scenario14() {
         // Prepare
         var origin = "name = 'Adrian' or age = 30";
         var expectedTarget = "{ $or:[{'name': 'Adrian'}, {'age': 30}] }";
@@ -106,7 +125,7 @@ public class AQLToMongoTranspilerTest {
     }
 
     @Test
-    void scenario12() {
+    void scenario15() {
         // Prepare
         var origin = "(name = 'Adrian')";
         var expectedTarget = "{ $and:[{'name': 'Adrian'}] }";
@@ -116,7 +135,7 @@ public class AQLToMongoTranspilerTest {
 
 
     @Test
-    void scenario13() {
+    void scenario16() {
         // Prepare
         var origin = "(name = 'Adrian' or age = 30)";
         var expectedTarget = "{ $and:[{ $or:[{'name': 'Adrian'}, {'age': 30}] }] }";
@@ -125,7 +144,7 @@ public class AQLToMongoTranspilerTest {
     }
 
     @Test
-    void scenario14() {
+    void scenario17() {
         // Prepare
         var origin = "(name = 'Adrian' or age = 30) and name = 'Maria'";
         var expectedTarget = "{ $and:[{ $and:[{ $or:[{'name': 'Adrian'}, {'age': 30}] }] }, {'name': 'Maria'}] }";
@@ -135,7 +154,7 @@ public class AQLToMongoTranspilerTest {
 
 
     @Test
-    void scenario15() {
+    void scenario18() {
         // Prepare
         var origin = "name = 'Adrian' or age = 30 and name = 'Maria'";
         var expectedTarget = "{ $or:[{'name': 'Adrian'}, { $and:[{'age': 30}, {'name': 'Maria'}] }] }";
@@ -144,14 +163,10 @@ public class AQLToMongoTranspilerTest {
     }
 
     @Test()
-    void scenario16() {
+    void scenario19() {
         assertThrows(AQLSyntaxException.class, () -> transpiler.transpile("name . 'Adrian"));
     }
 
-    @Test
-    void scenario17() {
-        test("name like 'Adr*'", "{'name': new RegExp('Adr*')}");
-    }
 
     private void test(String origin, String expectedTarget) {
         // Perform
