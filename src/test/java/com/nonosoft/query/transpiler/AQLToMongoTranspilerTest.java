@@ -36,7 +36,7 @@ public class AQLToMongoTranspilerTest {
     void scenario4() {
         // Prepare
         var origin = "birth_date = ´1981-09-22´";
-        var expectedTarget = "{'birth_date': {$eq: new ISODate('1981-09-22')}}";
+        var expectedTarget = "{'birth_date': new ISODate('1981-09-22')}";
 
         test(origin, expectedTarget);
     }

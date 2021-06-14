@@ -184,7 +184,7 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         addExpression(
                 ctx,
                 ctx.PROPERTY().getText(),
-                format("{$eq: new ISODate('%s')}", ctx.DATE_TIME().getText().replace("´", ""))
+                format("new ISODate('%s')", ctx.DATE_TIME().getText().replace("´", ""))
         );
         super.enterDateTimeEqExpression(ctx);
     }
