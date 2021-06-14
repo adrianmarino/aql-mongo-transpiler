@@ -40,9 +40,8 @@ public class AQLToMongoTranspiler {
             throw new AQLSyntaxException(errors);
 
         walker.walk(visitor, tree);
-        return visitor.getQuery();
+        return visitor.getQueryBuilder();
     }
-
 
     private AQLParser getParser(String query, BaseErrorListener errorListener) {
         var lexer = new AQLLexer(fromString(query));

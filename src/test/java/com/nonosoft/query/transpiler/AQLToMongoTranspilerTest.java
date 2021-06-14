@@ -55,7 +55,7 @@ public class AQLToMongoTranspilerTest {
     void scenario7() {
         // Prepare
         var origin = "birth_date >= ´1981-09-22 10:05:01´";
-        var expectedTarget = "{'birth_date': {$gte: new ISODate('1981-09-22T10:05:01Z')}}";
+        var expectedTarget = "{'birth_date': {$gte: new ISODate('1981-09-22T10:05:01Z')} }";
 
         test(origin, expectedTarget);
     }
@@ -64,7 +64,7 @@ public class AQLToMongoTranspilerTest {
     void scenario8() {
         // Prepare
         var origin = "birth_date != ´1981-09-22´";
-        var expectedTarget = "{'birth_date': {$ne: new ISODate('1981-09-22T00:00:00Z')}}";
+        var expectedTarget = "{'birth_date': {$ne: new ISODate('1981-09-22T00:00:00Z')} }";
 
         test(origin, expectedTarget);
     }
@@ -73,7 +73,7 @@ public class AQLToMongoTranspilerTest {
     void scenario9() {
         // Prepare
         var origin = "birth_date > ´1981-09-22´";
-        var expectedTarget = "{'birth_date': {$gt: new ISODate('1981-09-22T00:00:00Z')}}";
+        var expectedTarget = "{'birth_date': {$gt: new ISODate('1981-09-22T00:00:00Z')} }";
 
         test(origin, expectedTarget);
     }
@@ -82,7 +82,7 @@ public class AQLToMongoTranspilerTest {
     void scenario10() {
         // Prepare
         var origin = "birth_date >= ´1981-09-22´";
-        var expectedTarget = "{'birth_date': {$gte: new ISODate('1981-09-22T00:00:00Z')}}";
+        var expectedTarget = "{'birth_date': {$gte: new ISODate('1981-09-22T00:00:00Z')} }";
 
         test(origin, expectedTarget);
     }
@@ -92,7 +92,7 @@ public class AQLToMongoTranspilerTest {
     void scenario11() {
         // Prepare
         var origin = "birth_date < ´1981-09-22´";
-        var expectedTarget = "{'birth_date': {$lt: new ISODate('1981-09-22T00:00:00Z')}}";
+        var expectedTarget = "{'birth_date': {$lt: new ISODate('1981-09-22T00:00:00Z')} }";
 
         test(origin, expectedTarget);
     }
@@ -101,7 +101,7 @@ public class AQLToMongoTranspilerTest {
     void scenario12() {
         // Prepare
         var origin = "birth_date <= ´1981-09-22´";
-        var expectedTarget = "{'birth_date': {$lte: new ISODate('1981-09-22T00:00:00Z')}}";
+        var expectedTarget = "{'birth_date': {$lte: new ISODate('1981-09-22T00:00:00Z')} }";
 
         test(origin, expectedTarget);
     }
