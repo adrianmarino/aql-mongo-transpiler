@@ -36,6 +36,14 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         open(ctx, format("{'%s': %s}", property, value));
     }
 
+    /*
+     * ------------------------------------------------------------------------
+     *
+     * Boolean expressions
+     *
+     * ------------------------------------------------------------------------
+     */
+
     @Override
     public void enterParExpression(ParExpressionContext ctx) {
         open(ctx, "{ $and:[");
@@ -72,6 +80,15 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         super.exitAndExpression(ctx);
     }
 
+
+    /*
+     * ------------------------------------------------------------------------
+     *
+     * String expressions
+     *
+     * ------------------------------------------------------------------------
+     */
+
     @Override
     public void enterStrEqExpression(StrEqExpressionContext ctx) {
         addExpression(ctx, ctx.PROPERTY().getText(), ctx.STRING().getText());
@@ -87,6 +104,15 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         );
         super.enterStrNotEqExpression(ctx);
     }
+
+
+    /*
+     * ------------------------------------------------------------------------
+     *
+     * Numeric expressions
+     *
+     * ------------------------------------------------------------------------
+     */
 
     @Override
     public void enterNumEqExpression(NumEqExpressionContext ctx) {
@@ -142,6 +168,75 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
                 format("{$lte:'%s}", ctx.NUMBER().getText())
         );
         super.enterNumLTEqExpression(ctx);
+    }
+
+
+    /*
+     * ------------------------------------------------------------------------
+     *
+     * Datetime expressions
+     *
+     * ------------------------------------------------------------------------
+     */
+
+    @Override
+    public void enterDateTimeEqExpression(DateTimeEqExpressionContext ctx) {
+        addExpression(
+                ctx,
+                ctx.PROPERTY().getText(),
+                format("{$eq: new ISODate('%s')}", ctx.DATE_TIME().getText().replace("´", ""))
+        );
+        super.enterDateTimeEqExpression(ctx);
+    }
+
+    @Override
+    public void enterDateTimeGTEqExpression(DateTimeGTEqExpressionContext ctx) {
+        addExpression(
+                ctx,
+                ctx.PROPERTY().getText(),
+                format("{$gte: new ISODate('%s')}", ctx.DATE_TIME().getText().replace("´", ""))
+        );
+        super.enterDateTimeGTEqExpression(ctx);
+    }
+
+    @Override
+    public void enterDateTimeLTEqExpression(DateTimeLTEqExpressionContext ctx) {
+        addExpression(
+                ctx,
+                ctx.PROPERTY().getText(),
+                format("{$lte: new ISODate('%s')}", ctx.DATE_TIME().getText().replace("´", ""))
+        );
+        super.enterDateTimeLTEqExpression(ctx);
+    }
+
+    @Override
+    public void enterDateTimeGTExpression(DateTimeGTExpressionContext ctx) {
+        addExpression(
+                ctx,
+                ctx.PROPERTY().getText(),
+                format("{$gt: new ISODate('%s')}", ctx.DATE_TIME().getText().replace("´", ""))
+        );
+        super.enterDateTimeGTExpression(ctx);
+    }
+
+    @Override
+    public void enterDateTimeLTExpression(DateTimeLTExpressionContext ctx) {
+        addExpression(
+                ctx,
+                ctx.PROPERTY().getText(),
+                format("{$lt: new ISODate('%s')}", ctx.DATE_TIME().getText().replace("´", ""))
+        );
+        super.enterDateTimeLTExpression(ctx);
+    }
+
+    @Override
+    public void enterDateTimeNotEqExpression(DateTimeNotEqExpressionContext ctx) {
+        addExpression(
+                ctx,
+                ctx.PROPERTY().getText(),
+                format("{$ne: new ISODate('%s')}", ctx.DATE_TIME().getText().replace("´", ""))
+        );
+        super.enterDateTimeNotEqExpression(ctx);
     }
 
     @Override

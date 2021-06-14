@@ -1,36 +1,161 @@
 package com.nonosoft.query.transpiler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
 public class AQLToMongoTranspilerTest {
 
-    /**
-     * A simply query language
-     */
-    private final String AQL_QUERY = "(name='Adrian' or document.number='29042902') and birth_date from ´1981-09-22´ to ´2020-01-01´";
-
-    private final String MONGO_QUERY = "{ $and:[{ $and:[{ $or:[{'name': 'Adrian'}, {'document.number': '29042902'}] }] }, {'birth_date': {$gte:'1981-09-22', $lte:'2020-01-01'}}] }";
+    private final AQLToMongoTranspiler transpiler = new AQLToMongoTranspiler();
 
     @Test
-    @DisplayName("WHEN transpile a valid AQL query IT returns an equivalent mongodb query")
     void scenario1() {
-        // Prepare
-        var transpiler = new AQLToMongoTranspiler();
+        test("name = 'Adrian'", "{'name': 'Adrian'}");
+    }
 
+    @Test
+    void scenario2() {
+        test("age = 10", "{'age': 10}");
+    }
+
+    @Test
+    void scenario3() {
+        // Prepare
+        var origin = "birth_date from ´1981-09-22´ to ´2020-01-01´";
+        var expectedTarget = "{'birth_date': {$gte: new ISODate('1981-09-22'), $lte: new ISODate('2020-01-01')}}";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario4() {
+        // Prepare
+        var origin = "birth_date = ´1981-09-22´";
+        var expectedTarget = "{'birth_date': {$eq: new ISODate('1981-09-22')}}";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario5() {
+        // Prepare
+        var origin = "birth_date != ´1981-09-22´";
+        var expectedTarget = "{'birth_date': {$ne: new ISODate('1981-09-22')}}";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario6() {
+        // Prepare
+        var origin = "birth_date > ´1981-09-22´";
+        var expectedTarget = "{'birth_date': {$gt: new ISODate('1981-09-22')}}";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario7() {
+        // Prepare
+        var origin = "birth_date >= ´1981-09-22´";
+        var expectedTarget = "{'birth_date': {$gte: new ISODate('1981-09-22')}}";
+
+        test(origin, expectedTarget);
+    }
+
+
+    @Test
+    void scenario8() {
+        // Prepare
+        var origin = "birth_date < ´1981-09-22´";
+        var expectedTarget = "{'birth_date': {$lt: new ISODate('1981-09-22')}}";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario9() {
+        // Prepare
+        var origin = "birth_date <= ´1981-09-22´";
+        var expectedTarget = "{'birth_date': {$lte: new ISODate('1981-09-22')}}";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario10() {
+        // Prepare
+        var origin = "name = 'Adrian' and age = 30";
+        var expectedTarget = "{ $and:[{'name': 'Adrian'}, {'age': 30}] }";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario11() {
+        // Prepare
+        var origin = "name = 'Adrian' or age = 30";
+        var expectedTarget = "{ $or:[{'name': 'Adrian'}, {'age': 30}] }";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario12() {
+        // Prepare
+        var origin = "(name = 'Adrian')";
+        var expectedTarget = "{ $and:[{'name': 'Adrian'}] }";
+
+        test(origin, expectedTarget);
+    }
+
+
+    @Test
+    void scenario13() {
+        // Prepare
+        var origin = "(name = 'Adrian' or age = 30)";
+        var expectedTarget = "{ $and:[{ $or:[{'name': 'Adrian'}, {'age': 30}] }] }";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario14() {
+        // Prepare
+        var origin = "(name = 'Adrian' or age = 30) and name = 'Maria'";
+        var expectedTarget = "{ $and:[{ $and:[{ $or:[{'name': 'Adrian'}, {'age': 30}] }] }, {'name': 'Maria'}] }";
+
+        test(origin, expectedTarget);
+    }
+
+
+    @Test
+    void scenario15() {
+        // Prepare
+        var origin = "name = 'Adrian' or age = 30 and name = 'Maria'";
+        var expectedTarget = "{ $or:[{'name': 'Adrian'}, { $and:[{'age': 30}, {'name': 'Maria'}] }] }";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test()
+    void scenario16() {
+        assertThrows(AQLSyntaxException.class, () -> transpiler.transpile("name = 'Adian"));
+    }
+
+
+    private void test(String origin, String expectedTarget) {
         // Perform
-        var query = transpiler.transpile(AQL_QUERY);
+        var targetQuery = transpiler.transpile(origin);
 
         // Asserts
-        assertThat(query, is(equalTo(MONGO_QUERY)));
+        assertThat(targetQuery, is(equalTo(expectedTarget)));
 
-        log.info("AQL: {}", AQL_QUERY);
-        log.info("MongoDB: {}", MONGO_QUERY);
+        log.info("{} ====>> {}", origin, expectedTarget);
     }
 }

@@ -24,7 +24,14 @@ expression
     | PROPERTY '>=' NUMBER # numGTEqExpression
     | PROPERTY '<=' NUMBER # numLTEqExpression
 
-    // Datetime expression:
+    // Datetime expressions:
+    | PROPERTY '='  DATE_TIME # dateTimeEqExpression
+    | PROPERTY '!=' DATE_TIME # dateTimeNotEqExpression
+    | PROPERTY '>'  DATE_TIME # dateTimeGTExpression
+    | PROPERTY '<'  DATE_TIME # dateTimeLTExpression
+    | PROPERTY '>=' DATE_TIME # dateTimeGTEqExpression
+    | PROPERTY '<=' DATE_TIME # dateTimeLTEqExpression
+
     | PROPERTY 'from' DATE_TIME 'to' DATE_TIME # datetimeBetweenExpression
     ;
 //
