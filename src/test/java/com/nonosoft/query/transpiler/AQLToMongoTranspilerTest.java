@@ -14,9 +14,9 @@ public class AQLToMongoTranspilerTest {
     /**
      * A simply query language
      */
-    private final String AQL_QUERY = "(user.id=1 || user.age=20) and (user.name='adrian' or user.birth from ´1981-09-22 21:15:00´ to ´2020-01-01´)";
+    private final String AQL_QUERY = "(name='Adrian' or document.number='29042902') and birth_date from ´1981-09-22´ to ´2020-01-01´";
 
-    private final String MONGO_QUERY = "$and:[$and:[$or:[{'user.id': 1}, {'user.age': 20}]], $and:[$or:[{'user.name': 'adrian'}, {'user.birth': {$from:'1981-09-22 21:15:00', $to:'2020-01-01'}}]]]";
+    private final String MONGO_QUERY = "{ $and:[{ $and:[{ $or:[{'name': 'Adrian'}, {'document.number': '29042902'}] }] }, {'birth_date': {$gte:'1981-09-22', $lte:'2020-01-01'}}] }";
 
     @Test
     @DisplayName("WHEN transpile a valid AQL query IT returns an equivalent mongodb query")

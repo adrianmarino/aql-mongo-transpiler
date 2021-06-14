@@ -38,37 +38,37 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
 
     @Override
     public void enterParExpression(ParExpressionContext ctx) {
-        open(ctx, "$and:[");
+        open(ctx, "{ $and:[");
         super.enterParExpression(ctx);
     }
 
     @Override
     public void enterOrExpression(OrExpressionContext ctx) {
-        open(ctx, "$or:[");
+        open(ctx, "{ $or:[");
         super.enterOrExpression(ctx);
     }
 
     @Override
     public void enterAndExpression(AndExpressionContext ctx) {
-        open(ctx, "$and:[");
+        open(ctx, "{ $and:[");
         super.enterAndExpression(ctx);
     }
 
     @Override
     public void exitParExpression(ParExpressionContext ctx) {
-        close(ctx, "]");
+        close(ctx, "] }");
         super.exitParExpression(ctx);
     }
 
     @Override
     public void exitOrExpression(OrExpressionContext ctx) {
-        close(ctx, "]");
+        close(ctx, "] }");
         super.exitOrExpression(ctx);
     }
 
     @Override
     public void exitAndExpression(AndExpressionContext ctx) {
-        close(ctx, "]");
+        close(ctx, "] }");
         super.exitAndExpression(ctx);
     }
 
@@ -150,7 +150,7 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
                 ctx,
                 ctx.PROPERTY().getText(),
                 format(
-                        "{$from:'%s', $to:'%s'}",
+                        "{$gte: new ISODate('%s'), $lte: new ISODate('%s')}",
                         ctx.DATE_TIME(0).getText().replace("´", ""),
                         ctx.DATE_TIME(1).getText().replace("´", "")
                 )

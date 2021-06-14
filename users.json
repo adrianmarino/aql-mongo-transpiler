@@ -1,0 +1,22 @@
+[
+  {
+    "_id" : new ObjectId("60c777d90cdc6ccbdcbeae0d"),
+    "name" : "Adrian",
+    "age" : 30,
+    "birth_date" : new ISODate("1990-01-01T00:00:00.000Z"),
+    "document" : {
+      "type" : "dni",
+      "number" : "29042902"
+    }
+  },
+  {
+    "_id" : new ObjectId("60c7780f0cdc6ccbdcbeae1f"),
+    "name" : "Maria",
+    "age" : 35,
+    "birth_date" : new ISODate("1985-01-01T00:00:00.000Z"),
+    "document" : {
+      "type" : "dni",
+      "number" : "18041101"
+    }
+  }
+]
