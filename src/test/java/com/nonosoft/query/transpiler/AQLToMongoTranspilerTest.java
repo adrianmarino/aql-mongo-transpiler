@@ -145,7 +145,7 @@ public class AQLToMongoTranspilerTest {
 
     @Test()
     void scenario16() {
-        assertThrows(AQLSyntaxException.class, () -> transpiler.transpile("name = 'Adian"));
+        assertThrows(AQLSyntaxException.class, () -> transpiler.transpile("name . 'Adian"));
     }
 
 
