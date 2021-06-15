@@ -204,7 +204,6 @@ public class AQLToMongoTranspilerTest {
         test(origin, expectedTarget);
     }
 
-
     private void test(String origin, String expectedTarget) {
         // Perform
         var targetQuery = transpiler.transpile(origin);
