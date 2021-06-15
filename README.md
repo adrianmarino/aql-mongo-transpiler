@@ -12,3 +12,8 @@ Output:
 ```js
 $and:[$and:[$or:[{'user.id': 1}, {'user.age': 20}]], $and:[$or:[{'user.name': 'adrian'}, {'user.birth': {$from:'1981-09-22 21:15:00', $to:'2020-01-01'}}]]]
 ```
+
+
+## Diagram
+
+<img src="docs/AQL.png" width=100% height=40%>
