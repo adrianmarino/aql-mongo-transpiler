@@ -26,7 +26,6 @@ public class MongoQueryBuilder {
         query.append(operator);
     }
 
-
     /*
      * ------------------------------------------------------------------------
      * Boolean expressions
@@ -116,7 +115,7 @@ public class MongoQueryBuilder {
         expression(ctx, property, "$lte", getDateTime(value));
     }
 
-    public void dateTimeBetween(RuleContext ctx, String property, String from, String to) {
+    public void datetimeBetween(RuleContext ctx, String property, String from, String to) {
         between(ctx, property, getDateTime(from), getDateTime(to));
     }
 

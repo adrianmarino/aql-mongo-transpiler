@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.util.ArrayList;
 
-import static com.nonosoft.query.transpiler.parser.util.AntRLUtils.show;
+import static com.nonosoft.query.transpiler.parser.util.AntRLUtils.showTree;
 import static org.antlr.v4.runtime.CharStreams.fromString;
 
 public class AQLToMongoTranspiler {
@@ -27,7 +27,7 @@ public class AQLToMongoTranspiler {
     public void showAST(String query) {
         var parser = getParser(query, new AQLErrorListener(new ArrayList<String>()));
         var tree = parser.query();
-        show(tree, parser);
+        showTree(tree, parser);
     }
 
     public String transpile(String query) {
@@ -40,7 +40,7 @@ public class AQLToMongoTranspiler {
             throw new AQLSyntaxException(errors);
 
         walker.walk(visitor, tree);
-        return visitor.getQueryBuilder();
+        return visitor.getQuery();
     }
 
     private AQLParser getParser(String query, BaseErrorListener errorListener) {

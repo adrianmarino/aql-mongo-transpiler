@@ -11,7 +11,7 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         queryBuilder = new MongoQueryBuilder();
     }
 
-    public String getQueryBuilder() {
+    public String getQuery() {
         return queryBuilder.getQuery();
     }
 
@@ -164,7 +164,7 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
 
     @Override
     public void enterDatetimeBetweenExpression(DatetimeBetweenExpressionContext ctx) {
-        queryBuilder.dateTimeBetween(
+        queryBuilder.datetimeBetween(
                 ctx,
                 ctx.PROPERTY().getText(),
                 ctx.DATE_TIME(0).getText(),
@@ -172,7 +172,6 @@ public class AstToMongoQueryVisitor extends AQLBaseListener {
         );
         super.enterDatetimeBetweenExpression(ctx);
     }
-
 
     /*
      * ------------------------------------------------------------------------

@@ -7,23 +7,24 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import javax.swing.*;
 import java.util.List;
 
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+
 public class AntRLUtils {
 
     private AntRLUtils() {
     }
 
-    public static void show(ParseTree tree, Parser parser) {
-        //show AST in GUI
+    public static void showTree(ParseTree tree, Parser parser) {
         var frame = new JFrame("AST");
         var panel = new JPanel();
 
         var viewer = new TreeViewer(List.of(parser.getRuleNames()), tree);
-        viewer.setScale(3); // Scale a little
+        viewer.setScale(3); // Plot scale
 
         panel.add(viewer);
 
         frame.add(panel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
