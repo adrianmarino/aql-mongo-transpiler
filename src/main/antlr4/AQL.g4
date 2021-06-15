@@ -1,4 +1,4 @@
-grammar AQL; // ADRI Query Language Dad! ;)!
+grammar AQL;
 //
 //
 //
@@ -9,8 +9,8 @@ query: expression;
 
 expression
     : '(' expression ')'                                  # parExpression
-    | expression ('and' | 'AND' | '&&' | '&') expression  # andExpression
-    | expression ('or' | 'OR' | '||' | '|')   expression  # orExpression
+    | expression ('and' | '&&' | '&') expression  # andExpression
+    | expression ('or' | '||' | '|')   expression  # orExpression
 
     // String expressions:
     | PROPERTY '='  STRING # strEqExpression

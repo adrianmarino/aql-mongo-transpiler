@@ -168,6 +168,43 @@ public class AQLToMongoTranspilerTest {
     }
 
 
+    @Test
+    void scenario20() {
+        // Prepare
+        var origin = "name = 'Adrian' && age = 30";
+        var expectedTarget = "{ $and:[{'name': 'Adrian'}, {'age': 30}] }";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario21() {
+        // Prepare
+        var origin = "name = 'Adrian' & age = 30";
+        var expectedTarget = "{ $and:[{'name': 'Adrian'}, {'age': 30}] }";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario22() {
+        // Prepare
+        var origin = "name = 'Adrian' || age = 30";
+        var expectedTarget = "{ $or:[{'name': 'Adrian'}, {'age': 30}] }";
+
+        test(origin, expectedTarget);
+    }
+
+    @Test
+    void scenario23() {
+        // Prepare
+        var origin = "name = 'Adrian' | age = 30";
+        var expectedTarget = "{ $or:[{'name': 'Adrian'}, {'age': 30}] }";
+
+        test(origin, expectedTarget);
+    }
+
+
     private void test(String origin, String expectedTarget) {
         // Perform
         var targetQuery = transpiler.transpile(origin);
