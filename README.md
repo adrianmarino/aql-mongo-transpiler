@@ -16,4 +16,4 @@ $and:[$and:[$or:[{'user.id': 1}, {'user.age': 20}]], $and:[$or:[{'user.name': 'a
 
 ## Diagram
 
-<img src="docs/AQL.png" width=100% height=40%>
+<img src="docs/AQL.png" width=40% height=40%>
