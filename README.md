@@ -1,5 +1,6 @@
 # aql-mongo-transpiler
 
+A simple transpiler that get a simple kibana like query language and compile it to MongoDB query language.
 
 ```java
 // A simple query language...
