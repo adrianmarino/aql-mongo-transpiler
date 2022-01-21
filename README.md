@@ -1,4 +1,4 @@
-# aql-mongo-transpiler
+# kql-mongo-transpiler
 
 A simple transpiler that gets a simple kibana like query language and compile it to MongoDB query language.
 
